@@ -12,6 +12,7 @@ import numpy as np
 import tensorflow as tf
 import keras.backend.tensorflow_backend as KTF
 from nltk.translate.bleu_score import sentence_bleu
+from keras.callbacks import EarlyStopping
 
 # In[2]:
 
@@ -142,7 +143,8 @@ def train():
     model=Model([encoder_inputs,decoder_inputs],decoder_outputs)
     model.compile(optimizer='rmsprop',loss='categorical_crossentropy')
     model.summary()
-    model.fit([encoder_input_data,decoder_input_data],decoder_target_data,batch_size=batch_size,epochs=epochs,validation_split=0.2)
+    cbes=EarlyStopping(monitor='val_loss', patience=2, verbose=0, mode='auto')
+    model.fit([encoder_input_data,decoder_input_data],decoder_target_data,batch_size=batch_size,epochs=epochs,validation_split=0.2,callbacks=[cbes])
     model.save('s2s.h5')
 
 if '--train' in sys.argv:
@@ -150,7 +152,7 @@ if '--train' in sys.argv:
 
 # In[ ]:
 
-model=load_model('s2s.h5')
+#model=load_model('s2s.h5')
 encoder_model = Model(encoder_inputs, encoder_states)
 
 decoder_state_input_h = Input(shape=(latent_dim,))
