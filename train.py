@@ -22,10 +22,10 @@ response='stc_weibo_train_response'
 # In[3]:
 
 
-batch_size=64
+batch_size=32
 epochs=100
 latent_dim=128
-num_samples=15000
+num_samples=20000
 split_word=" "
 config = tf.ConfigProto()
 config.gpu_options.allow_growth=True
