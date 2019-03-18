@@ -6,7 +6,7 @@
 import os
 import sys
 from keras.models import Model,load_model
-from keras.layers import Input, LSTM, Dense
+from keras.layers import Input, LSTM, Dense,Activation
 from keras.layers.core import Lambda
 import numpy as np
 import tensorflow as tf
@@ -131,8 +131,9 @@ decoder_inputs=Input(shape=(None,num_decoder_tokens))
 decoder_lstm=LSTM(latent_dim,return_sequences=True,return_state=True)
 decoder_outputs,_,_=decoder_lstm(decoder_inputs,initial_state=encoder_states)
 decoder_dense=Dense(num_decoder_tokens) #,activation='softmax'
-decoder_weighted=Lambda(lambda x: x/0.7,activation='softmax')
-decoder_outputs=decoder_weighted(decoder_dense(decoder_outputs))
+decoder_weighted=Lambda((lambda x: x/0.7))
+decoder_softmax=Activation('softmax')
+decoder_outputs=decoder_softmax(decoder_weighted(decoder_dense(decoder_outputs)))
 
 
     # In[ ]:
