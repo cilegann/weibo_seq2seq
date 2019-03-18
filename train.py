@@ -151,8 +151,8 @@ if '--train' in sys.argv:
     train()
 
 # In[ ]:
-
-#model=load_model('s2s.h5')
+if '--train' not in sys.argv:
+    model=load_model('s2s.h5')
 encoder_model = Model(encoder_inputs, encoder_states)
 
 decoder_state_input_h = Input(shape=(latent_dim,))
