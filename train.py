@@ -7,6 +7,7 @@ import os
 import sys
 from keras.models import Model,load_model
 from keras.layers import Input, LSTM, Dense
+from keras.layers.core import Lambda
 import numpy as np
 import tensorflow as tf
 import keras.backend.tensorflow_backend as KTF
@@ -129,16 +130,17 @@ encoder_states=[state_h,state_c]
 decoder_inputs=Input(shape=(None,num_decoder_tokens))
 decoder_lstm=LSTM(latent_dim,return_sequences=True,return_state=True)
 decoder_outputs,_,_=decoder_lstm(decoder_inputs,initial_state=encoder_states)
-decoder_dense=Dense(num_decoder_tokens,activation='softmax')
-decoder_outputs=decoder_dense(decoder_outputs)
+decoder_dense=Dense(num_decoder_tokens) #,activation='softmax'
+decoder_weighted=Lambda(lambda x: x/0.7,activation='softmax')
+decoder_outputs=decoder_weighted(decoder_dense(decoder_outputs))
 
 
     # In[ ]:
 
 def train():
     model=Model([encoder_inputs,decoder_inputs],decoder_outputs)
-
     model.compile(optimizer='rmsprop',loss='categorical_crossentropy')
+    model.summary()
     model.fit([encoder_input_data,decoder_input_data],decoder_target_data,batch_size=batch_size,epochs=epochs,validation_split=0.2)
     model.save('s2s.h5')
 
