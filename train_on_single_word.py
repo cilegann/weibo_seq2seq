@@ -134,15 +134,17 @@ def train():
     cbes=EarlyStopping(monitor='val_loss', patience=2, verbose=0, mode='auto')
     model.fit([encoder_input_data,decoder_input_data],decoder_target_data,batch_size=batch_size,epochs=epochs,validation_split=0.2,callbacks=[cbes])
     model.save('s2s.h5')
-    model.sample_weights('s2s_weight.h5')
+    model.save_weights('s2s_weight.h5')
 
 if '--train' in sys.argv:
     train()
 
 # In[ ]:
 if '--train' not in sys.argv:
-    model.load_weights('s2s_weight.h5')
-
+    try:
+        model.load_weights('s2s_weight.h5')
+    except:
+        model=load_model('s2s.h5')
 encoder_model = Model(encoder_inputs, encoder_states)
 
 decoder_state_input_h = Input(shape=(latent_dim,))
