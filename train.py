@@ -131,7 +131,7 @@ decoder_inputs=Input(shape=(None,num_decoder_tokens))
 decoder_lstm=LSTM(latent_dim,return_sequences=True,return_state=True)
 decoder_outputs,_,_=decoder_lstm(decoder_inputs,initial_state=encoder_states)
 decoder_dense=Dense(num_decoder_tokens) #,activation='softmax'
-decoder_weighted=Lambda((lambda x: x/0.7))
+decoder_weighted=Lambda((lambda x: x/1.7))
 decoder_softmax=Activation('softmax')
 decoder_outputs=decoder_softmax(decoder_weighted(decoder_dense(decoder_outputs)))
 
